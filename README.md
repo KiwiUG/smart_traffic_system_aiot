@@ -1,4 +1,4 @@
-# 🚦 Traffic Light Controller (Arduino)
+# 🚦 Smart Cities: IoT-Based Real-Time Traffic Management with YOLO Detection
 
 A 4-way traffic light system with safe transitions and serial control.
 
