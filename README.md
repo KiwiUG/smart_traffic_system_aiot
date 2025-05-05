@@ -1,4 +1,4 @@
-# 🚦 Traffic Light Controller (Arduino)
+# 🚦 Smart Cities: IoT-Based Real-Time Traffic Management with YOLO Detection
 
 A 4-way traffic light system with safe transitions and serial control.
 
@@ -82,7 +82,7 @@ ser = serial.Serial('COM3', 9600)  # Change COM3 to your port
 ser.write(b'1')  # Turn Lane 1 green
 ser.write(b'-1') # Emergency stop
 ```
-###🔄 How It Works
+### 🔄 How It Works
 - Startup: All lanes are 🔴.
 - First Command: Selected lane + opposite turn 🟢.
 - Next Command:
