@@ -117,3 +117,84 @@ int getOppositeLane(int lane) {
   const int OPPOSITE_MAP[4] = {2, 3, 0, 1};
   return OPPOSITE_MAP[lane];
 }
+
+//Simulation Code:
+
+// Pin definitions for each lane: {Red, Yellow, Green}
+const int PIN_MAPPING[4][3] = {
+  {2, 3, 4},   // Lane 1
+  {5, 6, 7},   // Lane 2
+  {11, 12, 13}, // Lane 3
+  {8, 9, 10}    // Lane 4
+};
+
+// Timing constants (milliseconds)
+const unsigned long ALL_RED_DURATION = 5000;    // 5 seconds
+const unsigned long GREEN_DURATION = 30000;     // 30 seconds
+const unsigned long YELLOW_DURATION = 3000;     // 3 seconds
+
+void setup() {
+  // Initialize all pins
+  for (int lane = 0; lane < 4; lane++) {
+    for (int light = 0; light < 3; light++) {
+      pinMode(PIN_MAPPING[lane][light], OUTPUT);
+      digitalWrite(PIN_MAPPING[lane][light], LOW);
+    }
+  }
+  
+  // Start with all red
+  setAllRed();
+  delay(ALL_RED_DURATION);
+}
+
+void loop() {
+  // Phase 1: Lanes 1 & 3 green
+  setLanesGreen(0, 2);          // Lane 1 and 3
+  delay(GREEN_DURATION);
+  transitionToRed(0, 2);        // Yellow then red
+  
+  // Phase 2: Lanes 2 & 4 green
+  setLanesGreen(1, 3);          // Lane 2 and 4
+  delay(GREEN_DURATION);
+  transitionToRed(1, 3);        // Yellow then red
+}
+
+// Set all lanes to red
+void setAllRed() {
+  for (int lane = 0; lane < 4; lane++) {
+    digitalWrite(PIN_MAPPING[lane][0], HIGH); // Red on
+    digitalWrite(PIN_MAPPING[lane][1], LOW);  // Yellow off
+    digitalWrite(PIN_MAPPING[lane][2], LOW);  // Green off
+  }
+}
+
+// Set specific lanes to green
+void setLanesGreen(int laneA, int laneB) {
+  setAllRed(); // First ensure all are red
+  
+  // Turn on green for specified lanes
+  digitalWrite(PIN_MAPPING[laneA][0], LOW);   // Red off
+  digitalWrite(PIN_MAPPING[laneA][2], HIGH);  // Green on
+  
+  digitalWrite(PIN_MAPPING[laneB][0], LOW);   // Red off
+  digitalWrite(PIN_MAPPING[laneB][2], HIGH);  // Green on
+}
+
+// Transition lanes from green to red (via yellow)
+void transitionToRed(int laneA, int laneB) {
+  // Turn green to yellow
+  digitalWrite(PIN_MAPPING[laneA][2], LOW);   // Green off
+  digitalWrite(PIN_MAPPING[laneA][1], HIGH);  // Yellow on
+  
+  digitalWrite(PIN_MAPPING[laneB][2], LOW);   // Green off
+  digitalWrite(PIN_MAPPING[laneB][1], HIGH);  // Yellow on
+  
+  delay(YELLOW_DURATION);
+  
+  // Turn yellow to red
+  digitalWrite(PIN_MAPPING[laneA][1], LOW);   // Yellow off
+  digitalWrite(PIN_MAPPING[laneA][0], HIGH);  // Red on
+  
+  digitalWrite(PIN_MAPPING[laneB][1], LOW);   // Yellow off
+  digitalWrite(PIN_MAPPING[laneB][0], HIGH);  // Red on
+}
